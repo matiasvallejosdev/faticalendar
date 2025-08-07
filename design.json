@@ -1,0 +1,215 @@
+{
+  "projectName": "FatiCalendar",
+  "version": "1.0.0",
+  "description": "A life visualization application with vintage theme design",
+  "designSystem": {
+    "theme": {
+      "name": "Vintage Calendar",
+      "style": "Retro/Vintage",
+      "inspiration": "Classic life planners and vintage stationery"
+    },
+    "colorPalette": {
+      "primary": {
+        "vintage-cream": {
+          "hex": "#f5e9c9",
+          "hsl": "45 33% 90%",
+          "usage": "Main background, card backgrounds, light text"
+        },
+        "vintage-green": {
+          "hex": "#164e2d",
+          "hsl": "140 36% 20%",
+          "usage": "Primary text, borders, icons, filled elements"
+        },
+        "vintage-lightgreen": {
+          "hex": "#2a6d43",
+          "usage": "Hover states, secondary accents"
+        },
+        "vintage-darkgreen": {
+          "hex": "#0d3b1f",
+          "usage": "Pressed states, deep accents"
+        }
+      },
+      "system": {
+        "background": "hsl(45 33% 90%)",
+        "foreground": "hsl(140 36% 20%)",
+        "border": "hsl(140 36% 20%)",
+        "destructive": "hsl(0 84.2% 60.2%)",
+        "ring": "hsl(140 36% 20%)"
+      }
+    },
+    "typography": {
+      "fontFamily": {
+        "primary": "serif",
+        "title": "'Times New Roman', Times, serif",
+        "body": "system serif fonts"
+      },
+      "fontWeights": {
+        "normal": "400",
+        "medium": "500",
+        "bold": "700"
+      },
+      "classes": {
+        "vintage-title": {
+          "properties": "font-family: 'Times New Roman', Times, serif; font-weight: bold; letter-spacing: 1px; text-transform: uppercase;"
+        }
+      }
+    },
+    "spacing": {
+      "radius": {
+        "default": "0.5rem",
+        "lg": "var(--radius)",
+        "md": "calc(var(--radius) - 2px)",
+        "sm": "calc(var(--radius) - 4px)"
+      },
+      "container": {
+        "center": true,
+        "padding": "2rem",
+        "maxWidth": "1400px"
+      }
+    },
+    "components": {
+      "cards": {
+        "initialForm": {
+          "width": "450px",
+          "background": "vintage-cream",
+          "border": "vintage-green",
+          "shadow": "md",
+          "description": "Main form card for user data input"
+        }
+      },
+      "buttons": {
+        "primary": {
+          "background": "vintage-green",
+          "hover": "vintage-darkgreen",
+          "text": "vintage-cream",
+          "states": {
+            "loading": {
+              "opacity": "0.5",
+              "cursor": "not-allowed",
+              "icon": "Loader2 spinning"
+            }
+          }
+        }
+      },
+      "inputs": {
+        "style": {
+          "background": "vintage-cream",
+          "border": "vintage-green",
+          "text": "vintage-green",
+          "placeholder": "vintage-green/50"
+        }
+      },
+      "checkboxes": {
+        "border": "vintage-green",
+        "checked": {
+          "background": "vintage-green",
+          "border": "vintage-green"
+        }
+      },
+      "customElements": {
+        "vintageCircle": {
+          "base": "border-radius: 50%; aspect-ratio: 1; display: flex; align-items: center; justify-content: center; width: 2.5rem; height: 2.5rem;",
+          "filled": "background-color: #164e2d; border: 2px solid #164e2d; color: #f5e9c9;",
+          "empty": "border: 2px solid #164e2d; background-color: transparent; color: #164e2d;"
+        },
+        "vintageDivider": {
+          "height": "2px",
+          "background": "#164e2d",
+          "width": "100%",
+          "margin": "1rem 0"
+        },
+        "vintageProgress": {
+          "height": "8px",
+          "background": "rgba(22, 78, 45, 0.2)",
+          "fill": "#164e2d",
+          "borderRadius": "0"
+        }
+      }
+    },
+    "layout": {
+      "grid": {
+        "lifeView": {
+          "cols-8": "repeat(8, minmax(0, 1fr))",
+          "cols-16": "repeat(16, minmax(0, 1fr))"
+        }
+      },
+      "scrollbar": {
+        "width": "8px",
+        "track": "rgba(31, 41, 55, 0.2)",
+        "thumb": "rgba(22, 78, 45, 0.5)",
+        "thumbHover": "rgba(22, 78, 45, 0.8)"
+      }
+    },
+    "animations": {
+      "accordion": {
+        "down": "accordion-down 0.2s ease-out",
+        "up": "accordion-up 0.2s ease-out"
+      },
+      "loading": {
+        "spinner": "animate-spin",
+        "pulse": "animate-pulse"
+      }
+    },
+    "loadingStates": {
+      "button": {
+        "text": "Creating Your Calendar...",
+        "icon": "Loader2",
+        "animation": "spin",
+        "disabled": true
+      },
+      "initialLoad": {
+        "text": "Loading your life calendar...",
+        "animation": "pulse circles with delays",
+        "duration": "1.5s",
+        "delays": ["0s", "0.2s", "0.4s"]
+      },
+      "contentLoad": {
+        "text": "Calculating your life journey...",
+        "progressBar": {
+          "width": "60%",
+          "animation": "pulse"
+        }
+      }
+    },
+    "accessibility": {
+      "colorContrast": {
+        "background": "High contrast between vintage-cream and vintage-green",
+        "text": "WCAG AA compliant",
+        "borders": "Clear visual separation"
+      },
+      "focusStates": "Ring color matches vintage-green theme"
+    }
+  },
+  "userExperience": {
+    "formInteraction": {
+      "validation": "Real-time with Zod schema",
+      "feedback": "Visual error messages in red-700",
+      "loading": "Button disabled with spinner during submission"
+    },
+    "navigation": {
+      "flow": "Form → Loading → Life Visualization",
+      "states": "Clear loading indicators at each step"
+    }
+  },
+  "technicalImplementation": {
+    "framework": "Next.js 15 with App Router",
+    "styling": "Tailwind CSS with custom vintage theme",
+    "components": "Radix UI primitives",
+    "stateManagement": "Redux Toolkit with localStorage persistence",
+    "database": "Supabase with Row Level Security",
+    "validation": "Zod schemas with react-hook-form"
+  },
+  "designPrinciples": {
+    "consistency": "All components follow vintage color palette",
+    "hierarchy": "Clear visual hierarchy with typography and spacing",
+    "feedback": "Immediate user feedback for all interactions",
+    "accessibility": "WCAG compliant color contrasts and focus states",
+    "performance": "Optimized loading states and smooth animations"
+  },
+  "futureConsiderations": {
+    "darkMode": "Framework ready with 'class' dark mode",
+    "responsive": "Mobile-first design with Tailwind breakpoints",
+    "theming": "Extensible color system for multiple themes",
+    "internationalization": "Structure supports i18n implementation"
+  }
+}

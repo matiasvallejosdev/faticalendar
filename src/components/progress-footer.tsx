@@ -1,8 +1,7 @@
 import { differenceInYears } from 'date-fns';
-import { Clock, Battery, Calendar } from 'lucide-react';
 import useUserState from '../hooks/user-user-state';
 import { getLifeExpectancy } from '@/src/utils/life-calculator';
-
+import { AnimatedQuote } from './animated-quote';
 
 export function ProgressFooter() {
   const { userData } = useUserState();
@@ -12,19 +11,16 @@ export function ProgressFooter() {
       <footer className="border-t border-vintage-green px-4 md:px-6 py-4 bg-vintage-cream">
         <div className="grid grid-cols-3 gap-2 md:gap-6 mb-4 md:mb-6">
           <div className="text-center">
-            <Calendar className="h-4 w-4 md:h-5 md:w-5 mx-auto mb-1 md:mb-2 text-vintage-green/40" />
             <div className="text-[10px] md:text-xs text-vintage-green/40 uppercase tracking-wide">Current Age</div>
             <div className="font-medium text-sm md:text-2xl text-vintage-green/40">-- years</div>
           </div>
 
           <div className="text-center">
-            <Battery className="h-4 w-4 md:h-5 md:w-5 mx-auto mb-1 md:mb-2 text-vintage-green/40" />
             <div className="text-[10px] md:text-xs text-vintage-green/40 uppercase tracking-wide">Life Progress</div>
             <div className="font-medium text-sm md:text-2xl text-vintage-green/40">--% Complete</div>
           </div>
 
           <div className="text-center">
-            <Clock className="h-4 w-4 md:h-5 md:w-5 mx-auto mb-1 md:mb-2 text-vintage-green/40" />
             <div className="text-[10px] md:text-xs text-vintage-green/40 uppercase tracking-wide">Time Remaining</div>
             <div className="font-medium text-sm md:text-2xl text-vintage-green/40">-- years</div>
           </div>
@@ -57,23 +53,20 @@ export function ProgressFooter() {
 
   const progressPercentage = Math.min(Math.round((age / lifeExpectancy) * 100), 100)
 
-      return (
-      <footer className="border-t border-vintage-green px-4 md:px-6 py-4 bg-vintage-cream">
-        <div className="grid grid-cols-3 gap-2 md:gap-6 mb-4 md:mb-6">
+  return (
+    <footer className="border-t border-vintage-green px-4 md:px-6 py-6 bg-vintage-cream">
+      <div className="grid grid-cols-3 gap-2 md:gap-6 mb-4 md:mb-6">
         <div className="text-center">
-          <Calendar className="h-4 w-4 md:h-5 md:w-5 mx-auto mb-1 md:mb-2 text-vintage-green/60" />
           <div className="text-[10px] md:text-xs text-vintage-green/60 uppercase tracking-wide">Current Age</div>
           <div className="font-medium text-sm md:text-2xl text-vintage-green">{age} years</div>
         </div>
 
         <div className="text-center">
-          <Battery className="h-4 w-4 md:h-5 md:w-5 mx-auto mb-1 md:mb-2 text-vintage-green/60" />
           <div className="text-[10px] md:text-xs text-vintage-green/60 uppercase tracking-wide">Life Progress</div>
           <div className="font-medium text-sm md:text-2xl text-vintage-green">{progressPercentage}% Complete</div>
         </div>
 
         <div className="text-center">
-          <Clock className="h-4 w-4 md:h-5 md:w-5 mx-auto mb-1 md:mb-2 text-vintage-green/60" />
           <div className="text-[10px] md:text-xs text-vintage-green/60 uppercase tracking-wide">Time Remaining</div>
           <div className="font-medium text-sm md:text-2xl text-vintage-green">
             {yearsLeft > 0 ? `${yearsLeft} years` : "Extended!"}
@@ -90,8 +83,10 @@ export function ProgressFooter() {
         ></div>
       </div>
 
-      <div className="py-2 text-center text-xs md:text-sm text-vintage-green/80 px-2">
-        Based on your nationality and lifestyle choices, your estimated life expectancy is {lifeExpectancy} years.
+      <div className="flex flex-col items-center gap-4">
+        <div className="py-2 text-center text-xs md:text-sm text-vintage-green/80 px-2">
+          Based on your nationality and lifestyle choices, your estimated life expectancy is {lifeExpectancy} years.
+        </div>
       </div>
     </footer>
   )

@@ -101,28 +101,34 @@ export function LifeGrid() {
     const width = containerSize.width > 0 ? containerSize.width : fallbackWidth;
     const height = containerSize.height > 0 ? containerSize.height : fallbackHeight;
 
-    // Apply consistent padding for visual spacing
-    const padding = 4;
+    // Apply responsive padding - less on mobile, more on desktop
+    const padding = width < 768 ? 8 : width < 1024 ? 12 : 20;
     const availableWidth = width - padding * 2;
     const availableHeight = height - padding * 2;
     const { totalMonths } = basicData;
 
-    // Calculate optimal grid dimensions to fill space evenly
-    const containerAspectRatio = availableWidth / availableHeight;
+    // Calculate approximate square root to get starting dimensions
+    const approxSide = Math.sqrt(totalMonths);
     
-    // Try different column counts to find the best fit
+    // Try different column counts around the square root to find the best fit
     let bestConfig = { numColumns: 1, numRows: totalMonths, dotSize: 1, gap: 1 };
     let bestDotSize = 0;
     
-    for (let cols = Math.ceil(Math.sqrt(totalMonths * 0.5)); cols <= Math.ceil(Math.sqrt(totalMonths * 2)); cols++) {
+    // Test column counts in a reasonable range
+    const minCols = Math.max(10, Math.floor(approxSide * 0.5));
+    const maxCols = Math.min(100, Math.ceil(approxSide * 2));
+    
+    for (let cols = minCols; cols <= maxCols; cols++) {
       const rows = Math.ceil(totalMonths / cols);
-      const gap = 2;
+      const gap = Math.max(1, Math.floor(Math.min(availableWidth, availableHeight) / 200));
       
+      // Calculate maximum dot size that fits in container
       const maxDotWidth = (availableWidth - (cols - 1) * gap) / cols;
       const maxDotHeight = (availableHeight - (rows - 1) * gap) / rows;
       const dotSize = Math.min(maxDotWidth, maxDotHeight);
       
-      if (dotSize > bestDotSize && dotSize >= 3) {
+      // Prefer configurations that give larger dots and reasonable aspect ratios
+      if (dotSize > bestDotSize && dotSize >= 2) {
         bestDotSize = dotSize;
         bestConfig = { numColumns: cols, numRows: rows, dotSize: Math.floor(dotSize), gap };
       }
@@ -130,7 +136,7 @@ export function LifeGrid() {
     
     const { numColumns, numRows, dotSize, gap } = bestConfig;
 
-    // Recalculate with final dot size to center properly
+    // Calculate final grid dimensions
     const totalGridWidth = numColumns * dotSize + (numColumns - 1) * gap;
     const totalGridHeight = numRows * dotSize + (numRows - 1) * gap;
 
@@ -145,15 +151,21 @@ export function LifeGrid() {
     };
   }, [basicData, containerSize]);
 
-  // Optimized resize handler
+  // Optimized resize handler with debouncing
   const updateSize = useCallback(() => {
     if (containerRef.current) {
       const rect = containerRef.current.getBoundingClientRect();
       // Only update if we have actual dimensions and the element is visible
       if (rect.width > 0 && rect.height > 0 && rect.width < window.innerWidth && rect.height < window.innerHeight) {
-        setContainerSize({
-          width: rect.width,
-          height: rect.height,
+        setContainerSize(prevSize => {
+          // Only update if dimensions actually changed to prevent unnecessary re-renders
+          if (Math.abs(prevSize.width - rect.width) > 5 || Math.abs(prevSize.height - rect.height) > 5) {
+            return {
+              width: rect.width,
+              height: rect.height,
+            };
+          }
+          return prevSize;
         });
       }
     }
@@ -167,23 +179,53 @@ export function LifeGrid() {
       updateSize();
     }, 100);
 
-    // Use ResizeObserver for better performance
+    // Use ResizeObserver for better performance with debouncing
     let resizeObserver: ResizeObserver | null = null;
+    let debounceTimeout: NodeJS.Timeout | null = null;
     
     if (containerRef.current && 'ResizeObserver' in window) {
-      resizeObserver = new ResizeObserver(updateSize);
+      const debouncedUpdate = () => {
+        if (debounceTimeout) {
+          clearTimeout(debounceTimeout);
+        }
+        debounceTimeout = setTimeout(() => {
+          updateSize();
+        }, 100);
+      };
+      
+      resizeObserver = new ResizeObserver(debouncedUpdate);
       resizeObserver.observe(containerRef.current);
     } else {
-      // Fallback to window resize
-      window.addEventListener('resize', updateSize);
+      // Fallback to window resize with debouncing
+      const debouncedUpdate = () => {
+        if (debounceTimeout) {
+          clearTimeout(debounceTimeout);
+        }
+        debounceTimeout = setTimeout(() => {
+          updateSize();
+        }, 100);
+      };
+      window.addEventListener('resize', debouncedUpdate, { passive: true });
+      
+      // Store the cleanup function
+      const cleanup = () => {
+        clearTimeout(timeoutId);
+        if (debounceTimeout) {
+          clearTimeout(debounceTimeout);
+        }
+        window.removeEventListener('resize', debouncedUpdate);
+      };
+      
+      return cleanup;
     }
 
     return () => {
       clearTimeout(timeoutId);
+      if (debounceTimeout) {
+        clearTimeout(debounceTimeout);
+      }
       if (resizeObserver) {
         resizeObserver.disconnect();
-      } else {
-        window.removeEventListener('resize', updateSize);
       }
     };
   }, [updateSize]);
@@ -213,9 +255,11 @@ export function LifeGrid() {
             className="grid"
             style={{
               gridTemplateColumns: `repeat(${gridConfig.numColumns}, ${gridConfig.dotSize}px)`,
+              gridAutoFlow: 'row',
               gap: `${gridConfig.gap}px`,
               width: `${gridConfig.totalGridWidth}px`,
               height: `${gridConfig.totalGridHeight}px`,
+              placeItems: 'center',
             }}
           >
             {Array.from({ length: Math.max(600, Math.min(1440, basicData.totalMonths || 960)) }, (_, i) => (

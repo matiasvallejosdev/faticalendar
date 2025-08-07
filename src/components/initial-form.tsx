@@ -2,9 +2,11 @@
 import { useForm } from 'react-hook-form'; // Import SubmitHandler if needed for explicit typing
 import * as z from 'zod';
 import { zodResolver } from '@hookform/resolvers/zod';
+import { useState } from 'react';
 
 import { countries } from '@/data/countries';
 import { useUserActions } from '@/src/hooks/use-user-actions';
+import { saveUserData } from '@/lib/actions';
 
 import { Button } from '@/components/ui/button';
 import { Form, FormControl, FormField, FormItem, FormLabel, FormMessage } from '@/components/ui/form';
@@ -13,7 +15,7 @@ import { Input } from '@/components/ui/input';
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
 import { Checkbox } from '@/components/ui/checkbox';
 import { Label } from '@/components/ui/label';
-import { Calendar } from 'lucide-react';
+import { Calendar, Loader2 } from 'lucide-react';
 
 const formSchema = z.object({
   name: z.string().min(2, {
@@ -37,6 +39,7 @@ type FormSchemaOutput = z.output<typeof formSchema>;
 
 export function InitialForm() {
   const { setUserDataAction } = useUserActions();
+  const [isLoading, setIsLoading] = useState(false);
 
   const form = useForm<FormSchemaInput, FormSchemaOutput>({
     resolver: zodResolver(formSchema),
@@ -55,9 +58,19 @@ export function InitialForm() {
   // The 'data' parameter is typed as FormSchemaInput to satisfy the SubmitHandler<FormSchemaInput> expectation.
   // At runtime, react-hook-form passes the transformed (validated) data, which is FormSchemaOutput.
   // So, we use a type assertion to FormSchemaOutput.
-  const handleSubmitCallback = (data: FormSchemaInput) => {
-    const validatedData = data as FormSchemaOutput; // Assert to the actual runtime type
-    setUserDataAction(validatedData);
+  const handleSubmitCallback = async (data: FormSchemaInput) => {
+    const validatedData = data as FormSchemaOutput;
+    setIsLoading(true);
+    
+    try {
+      const savedUserData = await saveUserData(validatedData);
+      // Include the ID from the database in the Redux state
+      setUserDataAction(savedUserData);
+    } catch (error) {
+      console.error('Failed to save user data:', error);
+    } finally {
+      setIsLoading(false);
+    }
   };
 
   return (
@@ -222,8 +235,19 @@ export function InitialForm() {
               />
             </div>
 
-            <Button type="submit" className="w-full bg-vintage-green hover:bg-vintage-darkgreen text-vintage-cream">
-              Start Visualization
+            <Button 
+              type="submit" 
+              disabled={isLoading}
+              className="w-full bg-vintage-green hover:bg-vintage-darkgreen text-vintage-cream disabled:opacity-50 disabled:cursor-not-allowed"
+            >
+              {isLoading ? (
+                <>
+                  <Loader2 className="mr-2 h-4 w-4 animate-spin" />
+                  Creating Your Calendar...
+                </>
+              ) : (
+                'Start Visualization'
+              )}
             </Button>
           </form>
         </Form>
