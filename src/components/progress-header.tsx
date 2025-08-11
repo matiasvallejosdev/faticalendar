@@ -2,11 +2,42 @@
 
 import useUserState from "../hooks/user-user-state"
 import { ShareButton } from "./share-button"
-import { AnimatedQuote } from "./animated-quote"
-import { Share2 } from "lucide-react"
+import { Share2, Trash2 } from "lucide-react"
+import { useAppDispatch } from "@/lib/redux"
+import { setUserData } from "@/lib/features/user-slice"
+import { useState } from "react"
+import { toast } from "sonner"
 
 export function ProgressHeader() {
   const { userData } = useUserState();
+  const dispatch = useAppDispatch();
+  const [isDeleting, setIsDeleting] = useState(false);
+
+  const handleDeleteData = async () => {
+    if (!userData) return;
+    
+    // Confirmation before deletion
+    if (!confirm('Are you sure you want to delete all your data? This action cannot be undone.')) {
+      return;
+    }
+
+    setIsDeleting(true);
+    
+    try {
+      // Clear Redux state
+      dispatch(setUserData(null));
+      
+      // Clear localStorage
+      localStorage.removeItem('lifeVisualizerUserData');
+      
+      toast.success('All data has been deleted successfully');
+    } catch (error) {
+      console.error('Error deleting data:', error);
+      toast.error('Failed to delete data. Please try again.');
+    } finally {
+      setIsDeleting(false);
+    }
+  };
 
   // Helper function to render health indicator
   const HealthIndicator = ({ 
@@ -38,11 +69,21 @@ export function ProgressHeader() {
               {userData?.name ? `${userData.name}'s LIFE` : 'YOUR LIFE'}
             </h1>
             {userData && (
-              <ShareButton 
-                trigger={
-                  <Share2 className="h-5 w-5 text-vintage-green/40 hover:text-vintage-green/60 transition-colors cursor-pointer" />
-                }
-              />
+              <div className="flex items-center gap-2">
+                <ShareButton 
+                  trigger={
+                    <Share2 className="h-5 w-5 text-vintage-green/40 hover:text-vintage-green/60 transition-colors cursor-pointer" />
+                  }
+                />
+                <button
+                  onClick={handleDeleteData}
+                  disabled={isDeleting}
+                  className="p-1 text-vintage-green/40 hover:text-vintage-green/60 transition-colors cursor-pointer disabled:opacity-50 disabled:cursor-not-allowed"
+                  title="Delete all data"
+                >
+                  <Trash2 className="h-5 w-5" />
+                </button>
+              </div>
             )}
           </div>
           <div className="flex flex-wrap gap-x-0 gap-y-1">
@@ -59,7 +100,6 @@ export function ProgressHeader() {
               </div>
             )}
           </div>
-          <AnimatedQuote className="mt-4" />
         </div>
       </div>
     </header>

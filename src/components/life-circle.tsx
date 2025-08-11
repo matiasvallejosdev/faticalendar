@@ -117,21 +117,31 @@ export function LifeCircle({
   const monthInfo = getMonthInfo();
 
   const circleElement = (
-    <div
-      style={{
-        width: `${dotSize}px`,
-        height: `${dotSize}px`,
-        borderRadius: '50%',
-        backgroundColor: isCurrentMonth 
-          ? '#ff6b6b' 
-          : (isPast ? '#164e2d' : 'transparent'),
-        border: isPast 
-          ? (hasEvent ? `2px solid #ffd166` : 'none') 
-          : `1px solid #164e2d`,
-        cursor: 'pointer',
-        animation: isCurrentMonth ? 'pulse 2s infinite' : 'none',
-      }}
-    />
+    <div className="relative">
+      <div
+        style={{
+          width: `${dotSize}px`,
+          height: `${dotSize}px`,
+          borderRadius: '50%',
+          backgroundColor: isCurrentMonth 
+            ? '#ff6b6b' 
+            : (isPast ? '#164e2d' : 'transparent'),
+          border: isPast 
+            ? (hasEvent ? `2px solid #ffd166` : 'none') 
+            : `1px solid #164e2d`,
+          cursor: 'pointer',
+          animation: isCurrentMonth ? 'pulse 2s infinite' : 'none',
+        }}
+      />
+      {isCurrentMonth && (
+        <div 
+          className="absolute -top-1 -right-1 bg-red-500 text-white text-[8px] font-bold rounded-full px-1 py-0.5 leading-none shadow-md animate-bounce"
+          style={{ fontSize: Math.max(6, dotSize * 0.2) + 'px' }}
+        >
+          YOU
+        </div>
+      )}
+    </div>
   );
 
   const contentElement = (

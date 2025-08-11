@@ -5,10 +5,12 @@ import { useMemo, useState, useEffect, useRef, useCallback } from 'react';
 import { differenceInMonths } from 'date-fns';
 import { TooltipProvider } from '@/components/ui/tooltip';
 import { LifeCircle } from './life-circle';
+import { AppLoader } from './app-loader';
 
 export function LifeGrid() {
   const { userData } = useUserState();
   const [mounted, setMounted] = useState(false);
+  const [isGridReady, setIsGridReady] = useState(false);
   const [containerSize, setContainerSize] = useState({ width: 0, height: 0 });
 
   const containerRef = useRef<HTMLDivElement>(null);
@@ -179,6 +181,12 @@ export function LifeGrid() {
       updateSize();
     }, 100);
 
+    // Mark grid as ready after initial mount and sizing
+    const gridReadyTimeout = setTimeout(() => {
+      setIsGridReady(true);
+    }, 200);
+
+
     // Use ResizeObserver for better performance with debouncing
     let resizeObserver: ResizeObserver | null = null;
     let debounceTimeout: NodeJS.Timeout | null = null;
@@ -221,6 +229,7 @@ export function LifeGrid() {
 
     return () => {
       clearTimeout(timeoutId);
+      clearTimeout(gridReadyTimeout);
       if (debounceTimeout) {
         clearTimeout(debounceTimeout);
       }
@@ -230,13 +239,14 @@ export function LifeGrid() {
     };
   }, [updateSize]);
 
-  // Show minimal loading state if essential data is missing
-  if (!userData || !basicData || !gridConfig || !mounted) {
+  // Always render container for proper sizing, but show loading until everything is ready
+  if (!userData || !mounted || !basicData || !gridConfig || !isGridReady) {
     return (
-      <div className="w-full h-full flex items-center justify-center bg-vintage-cream rounded-lg">
-        <div className="text-vintage-green/70 text-base font-medium">
-          Preparing your life calendar...
-        </div>
+      <div
+        ref={containerRef}
+        className="w-full h-full flex items-center justify-center bg-vintage-cream rounded-lg"
+      >
+        <AppLoader message="Preparing your life calendar..." />
       </div>
     );
   }

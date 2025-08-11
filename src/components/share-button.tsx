@@ -102,18 +102,22 @@ export function ShareButton({ trigger }: ShareButtonProps) {
       // Wait a moment for any animations to settle
       await new Promise(resolve => setTimeout(resolve, 1000));
       
-      // Create a temporary style element to handle oklab colors and ensure full page visibility
+      // Create a temporary style element to ensure proper vintage colors and layout
       const tempStyle = document.createElement('style');
       tempStyle.innerHTML = `
-        * {
-          color: inherit !important;
-        }
-        [style*="oklab"] {
-          color: #4a5d23 !important;
-        }
+        /* Preserve vintage colors */
+        .text-vintage-green { color: #164e2d !important; }
+        .text-vintage-green\\/60 { color: rgba(22, 78, 45, 0.6) !important; }
+        .text-vintage-green\\/70 { color: rgba(22, 78, 45, 0.7) !important; }
+        .text-vintage-green\\/80 { color: rgba(22, 78, 45, 0.8) !important; }
+        .bg-vintage-cream { background-color: #f5e9c9 !important; }
+        .bg-vintage-green { background-color: #164e2d !important; }
+        .border-vintage-green { border-color: #164e2d !important; }
+        
         /* Ensure full page is visible */
         body, html {
           overflow: visible !important;
+          background-color: #f5e9c9 !important;
         }
         /* Make sure the app container shows its full height */
         .flex.flex-col.h-screen {
@@ -124,6 +128,10 @@ export function ShareButton({ trigger }: ShareButtonProps) {
         main.flex-1 {
           flex: none !important;
           height: auto !important;
+        }
+        /* Hide share dialogs and modals */
+        [role="dialog"], .fixed.inset-0 {
+          display: none !important;
         }
       `;
       document.head.appendChild(tempStyle);
@@ -147,18 +155,44 @@ export function ShareButton({ trigger }: ShareButtonProps) {
         y: 0,
         foreignObjectRendering: true,
         onclone: (clonedDoc, element) => {
-          // Replace any oklab colors with fallback colors in the clone
+          // Ensure vintage design is preserved in the clone
+          const clonedBody = clonedDoc.body;
+          if (clonedBody) {
+            clonedBody.style.overflow = 'visible';
+            clonedBody.style.height = 'auto';
+            clonedBody.style.backgroundColor = '#f5e9c9'; // vintage-cream
+          }
+          
+          // Apply vintage colors to all elements in clone
           const allElements = clonedDoc.querySelectorAll('*');
           allElements.forEach((el) => {
             const htmlEl = el as HTMLElement;
+            const classList = htmlEl.classList;
             
-            // Handle oklab colors
-            const computedStyle = window.getComputedStyle(el as Element);
-            if (computedStyle.color && computedStyle.color.includes('oklab')) {
-              htmlEl.style.color = '#164e2d'; // vintage-green
+            // Apply vintage colors based on classes
+            if (classList.contains('text-vintage-green')) {
+              htmlEl.style.color = '#164e2d';
             }
-            if (computedStyle.backgroundColor && computedStyle.backgroundColor.includes('oklab')) {
-              htmlEl.style.backgroundColor = '#f5e9c9'; // vintage-cream
+            if (classList.contains('bg-vintage-cream')) {
+              htmlEl.style.backgroundColor = '#f5e9c9';
+            }
+            if (classList.contains('bg-vintage-green')) {
+              htmlEl.style.backgroundColor = '#164e2d';
+            }
+            if (classList.contains('border-vintage-green')) {
+              htmlEl.style.borderColor = '#164e2d';
+            }
+            
+            // Handle opacity variants - safe string check
+            const classNameStr = htmlEl.className?.toString() || '';
+            if (classNameStr.includes('text-vintage-green/60')) {
+              htmlEl.style.color = 'rgba(22, 78, 45, 0.6)';
+            }
+            if (classNameStr.includes('text-vintage-green/70')) {
+              htmlEl.style.color = 'rgba(22, 78, 45, 0.7)';
+            }
+            if (classNameStr.includes('text-vintage-green/80')) {
+              htmlEl.style.color = 'rgba(22, 78, 45, 0.8)';
             }
             
             // Ensure visibility
@@ -167,12 +201,11 @@ export function ShareButton({ trigger }: ShareButtonProps) {
             }
           });
           
-          // Make sure the cloned document shows full content
-          const clonedBody = clonedDoc.body;
-          if (clonedBody) {
-            clonedBody.style.overflow = 'visible';
-            clonedBody.style.height = 'auto';
-          }
+          // Hide any share dialogs or modals in the clone
+          const dialogs = clonedDoc.querySelectorAll('[role="dialog"], .fixed.inset-0');
+          dialogs.forEach(dialog => {
+            (dialog as HTMLElement).style.display = 'none';
+          });
         },
         ignoreElements: (element) => {
           // Skip elements that might cause issues but keep structural elements

@@ -9,7 +9,7 @@ export function ProgressFooter() {
   if (!userData) {
     return (
       <footer className="border-t border-vintage-green px-4 md:px-6 py-4 bg-vintage-cream">
-        <div className="grid grid-cols-3 gap-2 md:gap-6 mb-4 md:mb-6">
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-6 mb-4 md:mb-6">
           <div className="text-center">
             <div className="text-[10px] md:text-xs text-vintage-green/40 uppercase tracking-wide">Current Age</div>
             <div className="font-medium text-sm md:text-2xl text-vintage-green/40">-- years</div>
@@ -17,12 +17,17 @@ export function ProgressFooter() {
 
           <div className="text-center">
             <div className="text-[10px] md:text-xs text-vintage-green/40 uppercase tracking-wide">Life Progress</div>
-            <div className="font-medium text-sm md:text-2xl text-vintage-green/40">--% Complete</div>
+            <div className="font-medium text-sm md:text-2xl text-vintage-green/40">--%</div>
           </div>
 
           <div className="text-center">
             <div className="text-[10px] md:text-xs text-vintage-green/40 uppercase tracking-wide">Time Remaining</div>
             <div className="font-medium text-sm md:text-2xl text-vintage-green/40">-- years</div>
+          </div>
+
+          <div className="text-center">
+            <div className="text-[10px] md:text-xs text-vintage-green/40 uppercase tracking-wide">Year Progress</div>
+            <div className="font-medium text-sm md:text-2xl text-vintage-green/40">--%</div>
           </div>
         </div>
 
@@ -53,9 +58,14 @@ export function ProgressFooter() {
 
   const progressPercentage = Math.min(Math.round((age / lifeExpectancy) * 100), 100)
 
+  // Calculate current year progress
+  const startOfYear = new Date(today.getFullYear(), 0, 1)
+  const endOfYear = new Date(today.getFullYear(), 11, 31, 23, 59, 59)
+  const yearProgress = Math.round(((today.getTime() - startOfYear.getTime()) / (endOfYear.getTime() - startOfYear.getTime())) * 100)
+
   return (
     <footer className="border-t border-vintage-green px-4 md:px-6 py-6 bg-vintage-cream">
-      <div className="grid grid-cols-3 gap-2 md:gap-6 mb-4 md:mb-6">
+      <div className="grid grid-cols-2 md:grid-cols-4 gap-2 md:gap-6 mb-4 md:mb-6">
         <div className="text-center">
           <div className="text-[10px] md:text-xs text-vintage-green/60 uppercase tracking-wide">Current Age</div>
           <div className="font-medium text-sm md:text-2xl text-vintage-green">{age} years</div>
@@ -63,7 +73,7 @@ export function ProgressFooter() {
 
         <div className="text-center">
           <div className="text-[10px] md:text-xs text-vintage-green/60 uppercase tracking-wide">Life Progress</div>
-          <div className="font-medium text-sm md:text-2xl text-vintage-green">{progressPercentage}% Complete</div>
+          <div className="font-medium text-sm md:text-2xl text-vintage-green">{progressPercentage}%</div>
         </div>
 
         <div className="text-center">
@@ -71,6 +81,11 @@ export function ProgressFooter() {
           <div className="font-medium text-sm md:text-2xl text-vintage-green">
             {yearsLeft > 0 ? `${yearsLeft} years` : "Extended!"}
           </div>
+        </div>
+
+        <div className="text-center">
+          <div className="text-[10px] md:text-xs text-vintage-green/60 uppercase tracking-wide">Year Progress</div>
+          <div className="font-medium text-sm md:text-2xl text-vintage-green">{yearProgress}%</div>
         </div>
       </div>
 
