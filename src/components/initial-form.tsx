@@ -74,7 +74,7 @@ export function InitialForm() {
   };
 
   return (
-    <Card className="w-[450px] shadow-md bg-vintage-cream border-vintage-green text-vintage-green">
+    <Card className="w-full max-w-md mx-auto shadow-md bg-vintage-cream border-vintage-green text-vintage-green">
       <CardHeader className="space-y-1 pb-4">
         <div className="flex items-center justify-center mb-2">
           <div className="w-12 h-12 rounded-full border-2 border-vintage-green flex items-center justify-center">

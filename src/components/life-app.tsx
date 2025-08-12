@@ -28,7 +28,7 @@ export function LifeApp() {
   // If no userData, show only the form
   if (!userData) {
     return (
-      <div className="flex items-center justify-center min-h-screen w-screen bg-vintage-cream">
+      <div className="flex items-start sm:items-center justify-center min-h-screen w-screen bg-vintage-cream px-4 py-6">
         <InitialForm />
       </div>
     );
