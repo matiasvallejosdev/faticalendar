@@ -1,36 +1,85 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 📅 FatiCalendar
 
-## Getting Started
+[![GitHub top language](https://img.shields.io/github/languages/top/matiasvallejosdev/faticalendar?color=164e2d)](https://github.com/matiasvallejosdev/faticalendar/search?l=typescript)
+![License](https://img.shields.io/github/license/matiasvallejosdev/faticalendar?label=license&logo=github&color=f80&logoColor=fff)
+![Forks](https://img.shields.io/github/forks/matiasvallejosdev/faticalendar.svg)
+![Stars](https://img.shields.io/github/stars/matiasvallejosdev/faticalendar.svg)
+![Watchers](https://img.shields.io/github/watchers/matiasvallejosdev/faticalendar.svg)
 
-First, run the development server:
+Experience FatiCalendar in action: [View Production](https://faticalendar.vercel.app/)
 
-```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
-```
+## 📘 Introduction
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+FatiCalendar is a life visualization application that displays your life in weeks as an interactive grid calendar. Built with Next.js 15 and powered by Supabase, it helps users visualize their life journey, track progress, and gain perspective on time through an elegant vintage-themed interface.
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+## ✨ Key Features
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+- **Life Visualization**: Interactive grid showing your life in weeks with visual progress indicators
+- **Personalized Calculations**: Life expectancy based on nationality and lifestyle factors
+- **Real-time Progress**: Current age, life progress percentage, and yearly progress tracking
+- **Social Sharing**: Capture and share your life visualization across platforms
+- **Responsive Design**: Vintage-themed interface optimized for all devices
+- **Data Persistence**: Local storage with optional Supabase cloud backup
 
-## Learn More
+## 🛠 Installation
 
-To learn more about Next.js, take a look at the following resources:
+1. Clone the repository:
+   ```bash
+   git clone https://github.com/matiasvallejosdev/faticalendar.git
+   ```
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+2. Install dependencies:
+   ```bash
+   npm install
+   ```
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+3. Set up environment variables in `.env.local`:
+   ```
+   # Supabase Configuration (Optional)
+   SUPABASE_URL=your_supabase_project_url_here
+   SUPABASE_ANON_KEY=your_supabase_anon_key_here
+   
+   # Client-side variables
+   NEXT_PUBLIC_SUPABASE_URL=your_supabase_project_url_here
+   NEXT_PUBLIC_SUPABASE_ANON_KEY=your_supabase_anon_key_here
+   ```
 
-## Deploy on Vercel
+4. Start the development server:
+   ```bash
+   npm run dev
+   ```
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 💡 Usage
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+1. Visit the app in your browser at `http://localhost:3000`
+2. Enter your personal information (name, birth year, nationality)
+3. Select your lifestyle factors (diet, exercise, alcohol, smoking)
+4. Visualize your life journey as an interactive grid
+5. Track your progress with real-time statistics
+6. Share your visualization with friends and family
+
+## 🎨 Tech Stack
+
+- **Frontend**: Next.js 15, TypeScript, Tailwind CSS
+- **State Management**: Redux Toolkit with localStorage persistence
+- **UI Components**: Radix UI primitives with custom vintage theme
+- **Backend**: Supabase (optional) for data persistence
+- **Icons**: Lucide React
+- **Notifications**: Sonner toast system
+
+## 🤝 Contributing
+
+FatiCalendar is an open-source project, and contributions are welcome. Feel free to fork the repository, make your changes, and submit a pull request.
+
+## 📞 Contact
+
+If you have any questions or need further assistance, you can contact the project maintainer:
+
+- **Name**: Matias Vallejos
+- **Website**: [matiasvallejos.com](https://matiasvallejos.com/)
+
+Feel free to reach out if you have any inquiries or need any additional information about the project.
+
+## 📄 License
+
+This project is open source and available under the [MIT License](LICENSE).
