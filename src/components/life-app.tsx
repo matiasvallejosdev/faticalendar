@@ -28,8 +28,12 @@ export function LifeApp() {
   // If no userData, show only the form
   if (!userData) {
     return (
-      <div className="flex items-start sm:items-center justify-center min-h-screen w-screen bg-vintage-cream px-4 py-6">
-        <InitialForm />
+      <div className="min-h-screen w-full bg-vintage-cream overflow-auto">
+        <div className="px-4 py-6 pb-20 sm:pb-6 sm:min-h-screen sm:flex sm:items-center sm:justify-center">
+          <div className="w-full sm:w-auto">
+            <InitialForm />
+          </div>
+        </div>
       </div>
     );
   }

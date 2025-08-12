@@ -76,12 +76,12 @@ export function InitialForm() {
   return (
     <Card className="w-full max-w-md mx-auto shadow-md bg-vintage-cream border-vintage-green text-vintage-green">
       <CardHeader className="space-y-1 pb-4">
-        <div className="flex items-center justify-center mb-2">
-          <div className="w-12 h-12 rounded-full border-2 border-vintage-green flex items-center justify-center">
-            <Calendar className="h-6 w-6 text-vintage-green" />
+        <div className="flex items-center justify-center gap-3 mb-2">
+          <div className="w-10 h-10 rounded-full border-2 border-vintage-green flex items-center justify-center">
+            <Calendar className="h-5 w-5 text-vintage-green" />
           </div>
+          <CardTitle className="text-2xl font-bold text-vintage-green vintage-title">Faticalendar</CardTitle>
         </div>
-        <CardTitle className="text-2xl font-bold text-center text-vintage-green vintage-title">Faticalendar</CardTitle>
         <div className="vintage-divider"></div>
         <CardDescription className="text-vintage-green/80 text-center">
           Enter your information to visualize your life journey.
